@@ -150,6 +150,23 @@ async function run (){
             }
 
         })
+        app.put('/users/doctor', verifyToken, async (req, res) => {
+            const user = req.body;
+            const requester = req.decodedEmail;
+            if (requester) {
+                const requesterAccount = await usersCollection.findOne({ email: requester });
+                if (requesterAccount.role === 'doctor') {
+                    const filter = { email: user.email };
+                    const updateDoc = { $set: { role: 'doctor' } };
+                    const result = await usersCollection.updateOne(filter, updateDoc);
+                    res.json(result);
+                }
+            }
+            else {
+                res.status(403).json({ message: 'you do not have access to Write Blog' })
+            }
+
+        })
 
 
     }
