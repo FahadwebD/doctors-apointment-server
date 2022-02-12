@@ -103,19 +103,31 @@ async function run (){
             const appointments = await cursor.toArray();
             res.json(appointments);
         })
+        
+        app.get('/appointments/:email' , async(req ,res)=>{
+            const email = req.params.email;
+            const query = {selectedDoctor: email}
+            const cursor =appointmentsCollection.find(query);
+            const orders = await cursor.toArray();
+            res.json(orders)
 
+        })
 
         //users api 
         app.get('/users/:email', async (req, res) => {
             const email = req.params.email;
             const query = { email: email };
             const user = await usersCollection.findOne(query);
-            let isAdmin = false;
+            let isRole = '';
             if (user?.role === 'admin') {
-                isAdmin = true;
+                isRole = 'admin';
             }
-            res.json({ admin: isAdmin });
+            if (user?.role === 'doctor') {
+                isRole = 'doctor';
+            }
+            res.json({ hisRole : isRole });
         })
+       
 
         app.post('/users', async (req, res) => {
             const user = req.body;
@@ -133,39 +145,23 @@ async function run (){
             res.json(result);
         });
 
-        app.put('/users/admin', verifyToken, async (req, res) => {
-            const user = req.body;
-            const requester = req.decodedEmail;
-            if (requester) {
-                const requesterAccount = await usersCollection.findOne({ email: requester });
-                if (requesterAccount.role === 'admin') {
-                    const filter = { email: user.email };
-                    const updateDoc = { $set: { role: 'admin' } };
-                    const result = await usersCollection.updateOne(filter, updateDoc);
-                    res.json(result);
-                }
-            }
-            else {
-                res.status(403).json({ message: 'you do not have access to make admin' })
-            }
-
+        app.put('/users/admin', async(req,res)=>{
+        
+            const user =req.body;
+            
+            const filter = {email: user.email};
+            const updateDoc = {$set:  {role:'admin'}};
+            const result = await usersCollection.updateOne(filter, updateDoc );
+            res.json(result)
         })
-        app.put('/users/doctor', verifyToken, async (req, res) => {
-            const user = req.body;
-            const requester = req.decodedEmail;
-            if (requester) {
-                const requesterAccount = await usersCollection.findOne({ email: requester });
-                if (requesterAccount.role === 'doctor') {
-                    const filter = { email: user.email };
-                    const updateDoc = { $set: { role: 'doctor' } };
-                    const result = await usersCollection.updateOne(filter, updateDoc);
-                    res.json(result);
-                }
-            }
-            else {
-                res.status(403).json({ message: 'you do not have access to Write Blog' })
-            }
-
+        app.put('/users/doctor', async(req,res)=>{
+        
+            const user =req.body;
+            
+            const filter = {email: user.email};
+            const updateDoc = {$set:  {role:'doctor'}};
+            const result = await usersCollection.updateOne(filter, updateDoc );
+            res.json(result)
         })
 
 
