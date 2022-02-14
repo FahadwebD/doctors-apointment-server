@@ -53,8 +53,15 @@ async function run (){
             console.log(result);
             res.json(result);
         });
+         
+        app.get('/users', async (req, res) => {
+            const query = {role}
 
-
+            const cursor = usersCollection.find(!query);
+    
+            const users = await cursor.toArray();
+            res.json(users);
+        });
           // doctors api
           app.get('/doctors', async (req, res) => {
             const cursor = doctorsCollection.find({});
@@ -96,14 +103,39 @@ async function run (){
         app.get('/appointments', async (req, res) => {
             const email = req.query.email;
             const date = req.query.date;
-
+             
             const query = { email: email, date: date }
 
             const cursor = appointmentsCollection.find(query);
             const appointments = await cursor.toArray();
             res.json(appointments);
         })
-        
+
+
+        app.get('/today/appointments', async (req, res) => {
+            
+            const date = new Date().toLocaleDateString();
+
+            const query = { date: date }
+
+            const cursor = appointmentsCollection.find(query);
+            const appointments = await cursor.toArray();
+            res.json(appointments);
+        })
+
+        app.get('/all/appointments', async (req, res) => {
+            const cursor = appointmentsCollection.find({});
+           const appointments = await cursor.toArray();
+            res.json(appointments);
+        });
+        app.get('/panding/appointments', async (req, res) => {
+            const query = { status : "pending"}
+            const cursor = appointmentsCollection.find(query);
+           const appointments = await cursor.toArray();
+            res.json(appointments);
+        });
+
+
         app.get('/appointments/:email' , async(req ,res)=>{
             const email = req.params.email;
             const query = {selectedDoctor: email}
