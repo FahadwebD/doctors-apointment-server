@@ -106,7 +106,8 @@ async function run (){
             res.json(result);
         })
        
-        //blogs post
+        //blogs api
+
         app.post('/blogs', async (req, res) => {
             const name = req.body.name;
             const email = req.body.email;
@@ -134,6 +135,16 @@ async function run (){
             }
             const result = await blogsCollection.insertOne(blog);
             res.json(result);
+        })
+
+
+        app.get('/my/blogs/:email', async (req, res) => {
+
+            const email = req.query.email; 
+            const query = { email: email }
+            const cursor = blogsCollection.find({});
+            const blogs = await cursor.toArray();
+            res.json(blogs);
         })
         
         //apointments api
