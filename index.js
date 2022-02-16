@@ -43,6 +43,7 @@ async function run (){
         const serviceCollection = database.collection('services');
         const usersCollection = database.collection('users');
         const doctorsCollection = database.collection('doctors');
+        const blogsCollection = database.collection('blogs')
         const appointmentsCollection = database.collection('appointments');
 
         app.get('/services' , async(req , res)=>{
@@ -104,8 +105,37 @@ async function run (){
             const result = await doctorsCollection.insertOne(doctor);
             res.json(result);
         })
-     
+       
+        //blogs post
+        app.post('/blogs', async (req, res) => {
+            const name = req.body.name;
+            const email = req.body.email;
+            const photoUrl = req.body.photoURL
+            const head = req.body.head;
 
+            const blogs= req.body.blogs;
+
+            const publishiDate = req.body.publishDate;
+
+            const pic = req.files.blogImage;
+            const picData = pic.data;
+            const encodedPic = picData.toString('base64');
+            const imageBuffer = Buffer.from(encodedPic, 'base64');
+            const blog = {
+                name,
+                email,
+                photoUrl,
+                head,
+                head,
+                blogs,
+                publishiDate,
+
+                image: imageBuffer
+            }
+            const result = await blogsCollection.insertOne(blog);
+            res.json(result);
+        })
+        
         //apointments api
 
         app.post('/appointments', async (req, res) => {
