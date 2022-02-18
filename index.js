@@ -138,15 +138,20 @@ async function run (){
         })
 
 
-        app.get('/my/blogs/:email', async (req, res) => {
+        app.get('/blogs/:email' , async(req ,res)=>{
+            const email = req.params.email;
+            const query = {email : email}
+            const cursor =blogsCollection.find(query);
+            const blogs = await cursor.toArray();
+            res.json(blogs)
 
-            const email = req.query.email; 
-            const query = { email: email }
+        })
+        app.get('/all/blogs', async (req, res) => {
+
             const cursor = blogsCollection.find({});
             const blogs = await cursor.toArray();
             res.json(blogs);
         })
-        
         //apointments api
 
         app.post('/appointments', async (req, res) => {
