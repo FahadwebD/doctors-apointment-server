@@ -274,6 +274,11 @@ async function run (){
             const result = await prescriptionsCollection.insertOne(prescription);
             res.json(result)
         });
+        app.get('/prescriptions', async (req, res) => {
+            const cursor = prescriptionsCollection.find({});
+           const appointments = await cursor.toArray();
+            res.json(appointments);
+        });
 
     }
     finally{
