@@ -44,6 +44,7 @@ async function run (){
         const usersCollection = database.collection('users');
         const doctorsCollection = database.collection('doctors');
         const blogsCollection = database.collection('blogs')
+        const prescriptionsCollection = database.collection('prescriptions')
         const appointmentsCollection = database.collection('appointments');
 
         app.get('/services' , async(req , res)=>{
@@ -145,6 +146,15 @@ async function run (){
             const blogs = await cursor.toArray();
             res.json(blogs)
 
+        })
+        app.delete('/blogs/:id' , async(req , res)=>{
+            const id = req.params.id;
+            console.log(id)
+            const query = { _id: ObjectId(id) };
+            console.log(query)
+            const blogs = await blogsCollection.deleteOne(query);
+            console.log('deleted product ' , blogs)
+            res.json(blogs);
         })
         app.get('/all/blogs', async (req, res) => {
 
@@ -255,7 +265,15 @@ async function run (){
             const result = await usersCollection.updateOne(filter, updateDoc );
             res.json(result)
         })
+  
 
+        //prescription api
+
+        app.post('/prescriptions', async (req, res) => {
+            const prescription = req.body;
+            const result = await prescriptionsCollection.insertOne(prescription);
+            res.json(result)
+        });
 
     }
     finally{
