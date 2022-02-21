@@ -184,7 +184,7 @@ async function run (){
 
         app.get('/today/appointments', async (req, res) => {
             
-            const date = new Date().toLocaleDateString();
+            const date = req.query.date
 
             const query = { date: date }
 
