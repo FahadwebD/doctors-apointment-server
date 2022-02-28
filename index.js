@@ -90,7 +90,7 @@ async function run (){
             console.log('deleted product ' , doctor)
             res.json(doctor);
         })
-
+      
         app.post('/doctors', async (req, res) => {
             const name = req.body.name;
             const email = req.body.email;
@@ -221,13 +221,21 @@ async function run (){
             const query = { email: email };
             const user = await usersCollection.findOne(query);
             let isRole = '';
+            let isDash = false;
+            let isNav = false;
+            if(user?.role){
+                isNav = true
+            }
             if (user?.role === 'admin') {
                 isRole = 'admin';
+                isDash = true;
+                
             }
             if (user?.role === 'doctor') {
                 isRole = 'doctor';
+               
             }
-            res.json({ hisRole : isRole });
+            res.json({ hisRole : isRole , isDash: isDash , isNav:isNav });
         })
        
 
