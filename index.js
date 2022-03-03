@@ -288,7 +288,30 @@ async function run (){
             res.json(appointments);
         });
 
+
+        app.get('/prescriptions/:email' , async(req ,res)=>{
+            const email = req.params.email;
+            const query = {doctor: email}
+            const cursor =prescriptionsCollection.find(query);
+            const orders = await cursor.toArray();
+            res.json(orders)
+
+        })
+        app.put('/prescriptions/doctor', async(req,res)=>{
+        
+            
+            const patients = req.body.email;
+             const date = req.body.date;
+            const prescription =req.body.newMed;
+            const filter = {patienEmail: patients};
+            console.log(filter)
+            const updateDoc = {$set:  {medicine: prescription , date: date} };
+            const result = await prescriptionsCollection.updateOne(filter, updateDoc );
+            res.json(result)
+        })
+
     }
+    
     finally{
         // await client.close();
     }
