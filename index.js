@@ -54,6 +54,36 @@ async function run (){
             res.send(services)
         })
 
+        app.delete('/services/:id' , async(req , res)=>{
+            const id = req.params.id;
+            console.log(id)
+            const query = { _id: ObjectId(id) };
+            console.log(query)
+            const service = await serviceCollection.deleteOne(query);
+            console.log('deleted product ' , service)
+            res.json(service);
+        })
+
+        app.put('/services/edit', async(req,res)=>{
+        
+            const id = req.body._id
+            const serviceName = req.body.name;
+            const servicePrice = req.body.price;
+            const servieSpace = req.body.price;
+            const serviceTime = req.body.time;
+            
+        
+            const filter = {_id: ObjectId(id)};
+            console.log(filter)
+            
+            const updateDoc = {$set:  {name:serviceName, price:servicePrice, time:serviceTime, space:servieSpace} };
+            console.log(updateDoc)
+            const result = await serviceCollection.updateOne(filter, updateDoc );
+            console.log(result)
+            res.json(result)
+        })
+
+
         app.post('/users', async (req, res) => {
             const user = req.body;
             const result = await usersCollection.insertOne(user);
