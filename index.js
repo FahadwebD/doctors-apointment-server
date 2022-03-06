@@ -329,7 +329,7 @@ async function run (){
         
             
             const patients = req.body.email;
-             const date = req.body.date;
+             const date = req.body.update;
             const prescription =req.body.newMed;
             const filter = {patienEmail: patients};
             console.log(filter)
