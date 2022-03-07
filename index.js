@@ -247,7 +247,14 @@ async function run (){
             res.json(appointments);
         });
 
+        app.get('/patients/appointments/:email' , async(req ,res)=>{
+            const email = req.params.email;
+            const query = {email: email}
+            const cursor =appointmentsCollection.find(query);
+            const orders = await cursor.toArray();
+            res.json(orders)
 
+        })
         app.get('/appointments/:email' , async(req ,res)=>{
             const email = req.params.email;
             const query = {selectedDoctor: email}
