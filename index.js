@@ -223,7 +223,16 @@ async function run (){
             res.json(appointments);
         })
 
+        app.get('/count/appointments', async (req, res) => {
+            
+            const date = req.query.date;
+             
+            const query = { date: date }
 
+            const cursor = appointmentsCollection.find(query);
+            const appointments = await cursor.toArray();
+            res.json(appointments);
+        })
         app.get('/today/appointments', async (req, res) => {
             
             const date = req.query.date
