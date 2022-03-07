@@ -48,6 +48,14 @@ async function run (){
         const appointmentsCollection = database.collection('appointments');
         const reviewsCollection = database.collection('reviews');
 
+
+
+        app.post('/add/services', async (req, res) => {
+            const service= req.body;
+            const result = await serviceCollection.insertOne(service);
+            res.json(result)
+        });
+
         app.get('/services' , async(req , res)=>{
             const cursor = serviceCollection.find({});
             const services = await cursor.toArray();
@@ -69,7 +77,7 @@ async function run (){
             const id = req.body._id
             const serviceName = req.body.name;
             const servicePrice = req.body.price;
-            const servieSpace = req.body.price;
+            const servieSpace = req.body.space;
             const serviceTime = req.body.time;
             
         
