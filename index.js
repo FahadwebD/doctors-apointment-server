@@ -205,8 +205,11 @@ async function run (){
 
         app.post('/appointments', async (req, res) => {
             const appointment = req.body;
+          console.log(appointment)
             const result = await appointmentsCollection.insertOne(appointment);
+            console.log(result)
             res.json(result)
+
         });
         
         app.get('/appointments', async (req, res) => {
