@@ -213,14 +213,29 @@ async function run (){
         });
         
         app.get('/appointments', async (req, res) => {
-            const email = req.query.email;
+            const service = req.query.service;
             const date = req.query.date;
              
-            const query = { email: email, date: date }
+            const query = { serviceName: service, date: date }
 
             const cursor = appointmentsCollection.find(query);
             const appointments = await cursor.toArray();
             res.json(appointments);
+        })
+        app.put('/reschedule/appointments', async(req,res)=>{
+        
+            const id = req.body.id;
+            console.log(id)
+            
+       
+            const date = req.body.date;
+         const serialNo =req.body.serialNo;
+         const timeing = req.body.timing;
+             const filter = { _id: ObjectId(id)};
+            console.log(filter)
+            const updateDoc = {$set:  {visitAt: timeing , date: date, yourSerial:serialNo} };
+            const result = await appointmentsCollection.updateOne(filter, updateDoc );
+            res.json(result)
         })
 
         app.get('/count/appointments', async (req, res) => {
